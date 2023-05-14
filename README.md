@@ -1,84 +1,66 @@
-# doc-chat-server
-
-**About the project**
-
-Think about a business whose data can be fed into ChatGPT's LLM so that their chatbot can fully engage clients' queries and concerns through instagram message.
-
-This project creates a vector storage of dummy business data using Langchain & Chroma DB (also has support for Redis and Pinecone) so that they can be queried with OpenAI’s LLM to return a response. It converts the data into text chunks which as stored on the disk as vectors (using Chroma db)
-
-See Langchain & Chroma db documentation here 
-
-[Chroma — 🦜🔗 LangChain 0.0.157](https://python.langchain.com/en/latest/modules/indexes/vectorstores/examples/chroma.html)
-
-When a customer messages the business' Instagram page
-
-1. A webhook is sent to the Flask server
-
-2. The message is received and Chroma db performs a 'vector cosine similarity search' across the stored vectors to return data about the business that is relevant to the client's query.
-
-3. It then takes this 'context' data, the chat history of Apex and the Client, and the customers question and feeds all this into OpenAI's language model to return a response
-
-4. The response is sent to the user.
-
-**Setting Up**
+![GPTContext](https://user-images.githubusercontent.com/55434969/225579902-ffe9a506-3cc3-4bfa-aca3-e563bcfe87eb.png)
 
 
+# GPTContext
 
-* Clone the project
-* Get all the necessary keys for the config file
-* Use any of the ‘creating index’ functions in the utils.py file to create your business data (chroma, redis, pinecone). Just set your location to your data file (pdf format) in the utils.py file
+This is an alternative Flask backend for GPTContext app that allows user to upload context files and query chat GPT AI based on it.
 
-    Note that these functions will return an index name / key that will be required when you want to query this index. 
+## Technical Overview
+This project recieves a context document in the form of PDF and uses Chromadb / Redis / Pinecone to create a vector storage from which the user can now query. Upon query, the question is taken from the user and a vector cosine similarity search is performed on the stored vectors. The relevant data is gotten from the stored vectors and together with the query is passed to OpenAI's LLM to generate a response.
+
+This flask backend currently uses ChromaDB but also contains alternative methods such as Redis and Pinecone to switch to. All the functions are available in the utils.py file.
+
+## Usage
+- In the web application, drag your files into the blue zone, or select choose file and choose your files.
+- Click submit.
+- The files will be uploaded and processed.
+- There should be a confirmation message prompting you to now start the conversation.
+- The session would expire in 5 minutes and your files will be deleted from the server.
+- The application will restart.
+- You can always restart the session by clicking tthe refresh icon at the bottom left of the interface
+
+## Follow this steps to setup and use locally
+
+## Installation Backend
+
+1. Download the project from github  
+2. Make sure to set your OPEN_AI_KEY and PINECONE_KEY (that is if you want to use the pinecone option) in the config file.
+3. Set your BEARER_TOKEN in the same config file. This will match the BEARER_TOKEN passed from the frontend for verification. 
+4. Open a terminal and navigate to the project directory.
+5. Install the Python dependencies by running the following command:
+``` pip install -r requirements.txt ```
+6. Run the flask server with the following command ``` flask run ```
+
+## Installation Frontend
+
+1. Download the project from GitHub.
+2. Open in a terminal.
+3. ```npm install``` to install all dependencies
+4. ```npm start``` to start the server.
+5. Create a .env file and create a environmental variable 'REACT_APP_BEARER_TOKEN'. This would be the same with the BEARER_TOKEN at the flask backend for authentication purposes
+
+### If you want to host it locally, follow the backend configurations above and get the locally hosted link and follow the steps below & set the frontend to use that route
+1. In the frontend directory inside the utis/api, set the api to use your localhost
+2. Restart the server.
+3. Project should run locally now.
 
 
-    We use Chroma so we can add it to our config file as HARDCODED_INDEX_KEY
-
-* You can also edit the prompt template to include the prompt
-* When all the files are set, run the flask server to listen for webhooks and generate the response.
-
-This project uses Meta developer API so some setup there is required to get some of the keys such as user access token, page access token, user_id, page_id, etc. See their docs for setting up Instagram messaging. 
-
-[Instagram Messaging - Messenger Platform - Documentation - Meta for Developers (facebook.com)](https://developers.facebook.com/docs/messenger-platform/instagram/)
-
-The code in the fb.py contains the functions that handle anything to do with Meta such as 
-
-
-
-* Getting a list of all messages from an Instagram user
-* Finding conversations with a specific user 
-* Sending the user a message
-
-It also contains other meta functions that aren’t actively used in the project but are there for doing some tests during development.
-
-The code in utils.py contains functions for creating the vectors for business data, getting relevant vectors when we do a cosine similarity search, querying those vectors with open AI LLM etc. 
-
-It also contains other functions that aren’t actively used in the project but are there for doing some tests during development.
-
-The app.py contains the webhook route along with two other api; addData and queryIndex,
-
-
-
-* You can use the addData api to send your pdf file via a post request to create the index. The form data includes the files and a fileLength (how many files sent) variable.
-* You can use the queryIndex to manually query the created index. This takes in an array of the chatHistory, the query and the index name. 
-
-When all the config keys are set, you can start the flask server [flask run]
-
-**Contributing**
+## Contributing
 
 I welcome contributions from anyone! To contribute to this project, follow these steps:
 
-
-
-* Fork the repository to your own GitHub account.
-* Clone the forked repository to your local machine.
-* Create a new branch for your changes with a descriptive name (e.g., fix-bug-123).
-* Make your changes to the codebase.
-* Commit your changes with a clear and descriptive commit message.
-* Push your changes to your forked repository.
-* Create a pull request (PR) from your forked repository to the original repository's master branch.
-* Describe your changes in the PR description and link to any relevant issues or pull requests.
-* Wait for feedback.
+1. Fork the repository to your own GitHub account.
+2. Clone the forked repository to your local machine.
+3. Create a new branch for your changes with a descriptive name (e.g., `fix-bug-123`).
+4. Make your changes to the codebase.
+5. Commit your changes with a clear and descriptive commit message.
+6. Push your changes to your forked repository.
+7. Create a pull request (PR) from your forked repository to the original repository's `master` branch.
+8. Describe your changes in the PR description and link to any relevant issues or pull requests.
+9. Wait for feedback.
 
 Thank you for your interest in contributing to this project!
 
- 
+
+
+
