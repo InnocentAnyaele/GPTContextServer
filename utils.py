@@ -199,8 +199,7 @@ def checkExtension(fileName):
     fileExtension = fileName_split[-1]
     return fileExtension
 
-def deleteAllData():
-    path = './data/'
+def deleteAllData(path):
     if os.path.exists(path):
         shutil.rmtree(path)
 
@@ -208,4 +207,5 @@ def deleteAllData():
 if __name__ == '__main__':
     # queryIndexWithChromaFromPersistent(config.HARDCODED_INDEX_KEY,'What is the document about?',[])
     # createIndexWithChroma(sampleData)
+    # deleteAllData('./data')
     pass
