@@ -180,7 +180,6 @@ def queryIndexWithChroma(path, query, chatHistory):
 
 
 
-
 def delete_context(dirName):
     time.sleep(300)
     if os.path.exists(dirName):
